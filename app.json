@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "life-mobile",
-    "slug": "life-mobile",
+    "name": "life-native",
+    "slug": "life-native",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
