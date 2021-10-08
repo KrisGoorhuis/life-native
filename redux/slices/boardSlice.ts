@@ -2,7 +2,7 @@ import {
    createSlice,
    PayloadAction,
 } from "@reduxjs/toolkit"
-import { Board, Square } from "../../model/board"
+import { Board, Tile } from "../../model/board"
 import _ from 'lodash'
 
 
@@ -34,7 +34,7 @@ const bookDataSlice = createSlice({
    name: "BoardSlice",
    initialState: initialBoardDataState,
    reducers: {
-      setBoardData: (state, { payload }: PayloadAction<Square[][]>) => { state.boardData = payload },
+      setBoardData: (state, { payload }: PayloadAction<Tile[][]>) => { state.boardData = payload },
       setBoardWidth: (state, { payload }: PayloadAction<number>) => { state.boardWidth = payload },
       setBoardHeight: (state, { payload }: PayloadAction<number>) => { state.boardHeight = payload },
       setTileWidth: (state, { payload }: PayloadAction<number>) => { state.tileWidth = payload },
@@ -44,7 +44,7 @@ const bookDataSlice = createSlice({
       setTurnTime: (state, { payload }: PayloadAction<number>) => { state.turnTime = payload },
       setGeneration: (state, { payload }: PayloadAction<number>) => { state.generation = payload },
 
-      advanceTime: (state, { payload }: PayloadAction<number>) => {
+      advanceTime: (state) => {
          let nextBoardData = _.cloneDeep(state.boardData)
          let nextGeneration = state.generation
 
@@ -119,7 +119,7 @@ const bookDataSlice = createSlice({
          state.boardData = nextBoardData
          state.generation = nextGeneration
       },
-      generateEmptyArray: (state, { payload }: PayloadAction<number>) => {
+      generateEmptyArray: (state) => {
          let emptyArray = new Array(state.boardWidth)
 
          for (let i = 0; i < emptyArray.length; i++) {
@@ -128,7 +128,7 @@ const bookDataSlice = createSlice({
 
          state.boardData = emptyArray
       },
-      randomizeLife: (state, { payload }: PayloadAction<number>) => {
+      randomizeLife: (state) => {
          let lifeArray = _.cloneDeep(state.boardData)
 
          for (let x = 0; x < lifeArray.length; x++) {
@@ -141,7 +141,7 @@ const bookDataSlice = createSlice({
          state.boardData = lifeArray
       },
 
-      // toggleLife: (state, { payload }: PayloadAction<number>) => { state.boardHeight = payload },
+      toggleLife: (state, { payload }: PayloadAction<Board>) => { state.boardData = payload },
    },
 })
 
@@ -154,7 +154,11 @@ export const {
    setPaused,
    setProliferationPercentage,
    setTurnTime,
+   advanceTime,
    setGeneration,
+   generateEmptyArray,
+   randomizeLife,
+   toggleLife,
 } = bookDataSlice.actions
 
 export default bookDataSlice

@@ -1,6 +1,6 @@
-export type Board = Square[][]
+export type Board = Tile[][]
 
-export interface Square {
-   life : boolean
-   age  : number
+export interface Tile {
+   life   : boolean
+   age    : number
 }
