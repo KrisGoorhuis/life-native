@@ -78,17 +78,17 @@ export default function Board(props: BoardProps) {
                <View style={styles.ageInfoContainer}>
                   <Text>Age</Text>
                   <View style={styles.ageInfoDetails}>
-                     <View>-</View>
+                     <Text>-</Text>
                      <View style={styles.ageInfoAdolescent}></View>
                      <View style={styles.ageInfoJuvenile}></View>
                      <View style={styles.ageInfoAdult}></View>
-                     <View>+</View>
+                     <Text>+</Text>
                   </View>
                </View>
-               <section id="generation_container">
+               <View style={styles.generationContainer}>
                   <Text>Generation</Text>
-                  <p>{generation}</p>
-               </section>
+                  <Text>{generation}</Text>
+               </View>
             </View>
             <table>
                {
@@ -173,5 +173,11 @@ const styles = StyleSheet.create({
    ageInfoAdult: {
       ...listing,
       backgroundColor: 'blue'
+   },
+   generationContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: 25,
+      color: 'white',
    }
 })
