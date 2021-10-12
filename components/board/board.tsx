@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react'
-import './board.css'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Tile from './tile'
+import LifeTile from './tile'
 import { State } from '../../redux'
 import { advanceTime, generateEmptyArray, randomizeLife, toggleLife } from '../../redux/slices/boardSlice'
 import _ from 'lodash'
@@ -36,7 +35,6 @@ export default function Board(props: BoardProps) {
 
    function _advanceTime() {
       dispatch(advanceTime())
-
       setTimeout(() => {
          _advanceTime()
       }, turnTimeRef.current)
@@ -68,7 +66,6 @@ export default function Board(props: BoardProps) {
       console.log(`Creating life at [${x}, ${y}]`)
 
       dispatch(toggleLife(newBoardData))
-      dispatch({ type: 'TOGGLE_LIFE', payload: newBoardData })
    }
 
    return (
@@ -90,26 +87,26 @@ export default function Board(props: BoardProps) {
                   <Text>{generation}</Text>
                </View>
             </View>
-            <table>
+            <View>
                {
                   boardData === null ? // This will attempt to render before useEffect makes the call to generate. Give 'em a sec.
-                     <tbody id="generating_message"><tr><td>Creating life...</td></tr></tbody>
+                     <View style={styles.generatingMessage}><View><Text>Creating life...</Text></View></View>
                      :
-                     <tbody id="table_body">
+                     <View style={styles.boardBody}>
                         {boardData.map((row, x) =>
-                           <tr className="table_row" key={x}>
+                           <View style={styles.boardRow} key={x}>
                               {row.map((tileData, y) =>
-                                 <Tile
+                                 <LifeTile
                                     tile={{ life: tileData.life, age: tileData.age }}
                                     toggleLife={() => _toggleLife(x, y)}
                                     key={y}
                                  />
                               )}
-                           </tr>
+                           </View>
                         )}
-                     </tbody>
+                     </View>
                }
-            </table>
+            </View>
          </View>
 
       </View>
@@ -119,7 +116,6 @@ export default function Board(props: BoardProps) {
 const listing = {
    width: 8,
    height: 8,
-   border: 'grayblue',
    padding: 1,
    margin: 3,
    marginBottom: 0,
@@ -134,12 +130,10 @@ const styles = StyleSheet.create({
    boardMain: {
       padding: 10,
       paddingTop: 15,
-      // box-shadow: -4px 2px 10px 2px rgba(0, 0, 0, .5),
       borderRadius: 5,
       display: 'flex',
       flexDirection: 'column',
       paddingBottom: 30,
-      background: 'grayblue',
       marginBottom: 15,
    },
    infoBox: {
@@ -150,7 +144,7 @@ const styles = StyleSheet.create({
       fontSize: 16,
    },
    ageInfoContainer: {
-      // color: 'white',
+
    },
    ageInfoDetails: {
       display: 'flex',
@@ -158,7 +152,6 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       height: 25,
-      listStyle: 'none',
       margin: 0,
       padding: 0,
    },
@@ -179,5 +172,21 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
       height: 25,
       color: 'white',
+   },
+   generatingMessage: {
+      minWidth: 300,
+      minHeight: 300,
+      color: 'white',
+      fontSize: 16,
+   },
+   boardBody: {
+      display: 'flex',
+      flexDirection: 'row',
+      height: '100%',
+      justifyContent: 'center',
+   },
+   boardRow: {
+      display: 'flex',
+      flexDirection: 'column',
    }
 })

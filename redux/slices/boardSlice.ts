@@ -20,13 +20,13 @@ interface BookDataState {
 
 const initialBoardDataState: BookDataState = {
    boardData: [],
-   boardWidth: 40,
+   boardWidth: 50,
    boardHeight: 30,
    tileWidth: 1,
    tileHeight: 1,
    paused: false,
    proliferationPercentage: 15,
-   turnTime: 350,
+   turnTime: 1,
    generation: 0
 }
 
@@ -43,7 +43,6 @@ const bookDataSlice = createSlice({
       setProliferationPercentage: (state, { payload }: PayloadAction<number>) => { state.proliferationPercentage = payload },
       setTurnTime: (state, { payload }: PayloadAction<number>) => { state.turnTime = payload },
       setGeneration: (state, { payload }: PayloadAction<number>) => { state.generation = payload },
-
       advanceTime: (state) => {
          let nextBoardData = _.cloneDeep(state.boardData)
          let nextGeneration = state.generation
@@ -69,6 +68,7 @@ const bookDataSlice = createSlice({
                   }
                }
             }
+
 
 
             // These are the rules of Conway's game. Translated from Wikipedia.
@@ -140,8 +140,8 @@ const bookDataSlice = createSlice({
 
          state.boardData = lifeArray
       },
-
       toggleLife: (state, { payload }: PayloadAction<Board>) => { state.boardData = payload },
+      resetBoard: (state) => { state = initialBoardDataState }
    },
 })
 
@@ -159,6 +159,7 @@ export const {
    generateEmptyArray,
    randomizeLife,
    toggleLife,
+   resetBoard,
 } = bookDataSlice.actions
 
 export default bookDataSlice

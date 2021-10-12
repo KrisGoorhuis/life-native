@@ -11,7 +11,7 @@ interface TileProps {
    toggleLife: () => void
 }
 
-export default function Tile(props: TileProps) {
+export default function LifeTile(props: TileProps) {
 
    const getAgeColor = () => {
       if (props.tile.age === 1) {
@@ -27,9 +27,8 @@ export default function Tile(props: TileProps) {
 
    const styles = StyleSheet.create({
       tile: {
-         borderColor: 'grayblue',
-         width: useSelector((state: State) => state.boardData.tileWidth),
-         height: useSelector((state: State) => state.boardData.tileHeight),
+         width: useSelector((state: State) => state.boardData.tileWidth) * 5,
+         height: useSelector((state: State) => state.boardData.tileHeight) * 5,
          backgroundColor: getAgeColor()
       }
    })
@@ -44,5 +43,3 @@ export default function Tile(props: TileProps) {
       </View>
    )
 }
-
-
