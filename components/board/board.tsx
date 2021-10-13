@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import LifeTile from './tile'
 import { State } from '../../redux'
-import { advanceTime, generateEmptyArray, randomizeLife, toggleLife } from '../../redux/slices/boardSlice'
+import { advanceTime, generateNewArray, toggleLife } from '../../redux/slices/boardSlice'
 import _ from 'lodash'
 import { Text, StyleSheet, View } from 'react-native'
 
@@ -15,8 +15,6 @@ interface BoardProps {
 
 export default function Board(props: BoardProps) {
    const turnTime = useSelector((state: State) => state.boardData.turnTime)
-   const width = useSelector((state: State) => state.boardData.boardWidth)
-   const height = useSelector((state: State) => state.boardData.boardHeight)
    const boardData = useSelector((state: State) => state.boardData.boardData)
    const generation = useSelector((state: State) => state.boardData.generation)
 
@@ -27,13 +25,13 @@ export default function Board(props: BoardProps) {
 
 
    function startGame() {
-      dispatch(generateEmptyArray())
-      dispatch(randomizeLife())
+      dispatch(generateNewArray())
 
       _advanceTime()
    }
 
    function _advanceTime() {
+      console.log("advancing")
       dispatch(advanceTime())
       setTimeout(() => {
          _advanceTime()
@@ -41,18 +39,6 @@ export default function Board(props: BoardProps) {
    }
 
    useEffect(() => {
-      // Missing dependencies warning: function name. Seems harmless. I have tried:
-      // List function in dependency array. Call stack exceeded
-      // Moving the function definition in here. Missing dep: props. It suggests destructuring outside.
-      // Destructure outside. Missing dep: all of the destructured things.
-      // So here it stays and ignored goes the warning.
-
-      // if (window.screen.availWidth < 600) {
-      //    // If we're on a phone, start a slim board instead.
-      //    dispatch({ type: 'SET_WIDTH', payload: 25 })
-      //    dispatch(setBoardWidth(25))
-      // }
-
       startGame()
    }, [])
 

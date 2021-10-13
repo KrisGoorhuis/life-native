@@ -9,13 +9,8 @@ export default function App() {
   return (
     <Provider store={store}>
       <View style={styles.container}>
-        <ScrollView style={{ minHeight: 300 }}>
-          <Board />
-        </ScrollView>
-        <ScrollView style={{ minHeight: 300 }}>
-          <Controls />
-        </ScrollView>
-
+        <Board />
+        <Controls />
       </View>
     </Provider>
   );
@@ -27,5 +22,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 100
   },
 });

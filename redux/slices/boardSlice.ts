@@ -34,15 +34,14 @@ const bookDataSlice = createSlice({
    name: "BoardSlice",
    initialState: initialBoardDataState,
    reducers: {
-      setBoardData: (state, { payload }: PayloadAction<Tile[][]>) => { state.boardData = payload },
       setBoardWidth: (state, { payload }: PayloadAction<number>) => { state.boardWidth = payload },
       setBoardHeight: (state, { payload }: PayloadAction<number>) => { state.boardHeight = payload },
       setTileWidth: (state, { payload }: PayloadAction<number>) => { state.tileWidth = payload },
       setTileHeight: (state, { payload }: PayloadAction<number>) => { state.tileHeight = payload },
-      setPaused: (state, { payload }: PayloadAction<boolean>) => { state.paused = payload },
       setProliferationPercentage: (state, { payload }: PayloadAction<number>) => { state.proliferationPercentage = payload },
       setTurnTime: (state, { payload }: PayloadAction<number>) => { state.turnTime = payload },
       setGeneration: (state, { payload }: PayloadAction<number>) => { state.generation = payload },
+      togglePause: (state, { payload }: PayloadAction<boolean>) => { state.paused = payload },
       advanceTime: (state) => {
          let nextBoardData = _.cloneDeep(state.boardData)
          let nextGeneration = state.generation
@@ -119,45 +118,38 @@ const bookDataSlice = createSlice({
          state.boardData = nextBoardData
          state.generation = nextGeneration
       },
-      generateEmptyArray: (state) => {
-         let emptyArray = new Array(state.boardWidth)
+      generateNewArray: (state) => {
+         let newArray = new Array(state.boardWidth)
 
-         for (let i = 0; i < emptyArray.length; i++) {
-            emptyArray[i] = new Array(state.boardHeight)
+         for (let i = 0; i < newArray.length; i++) {
+            newArray[i] = new Array(state.boardHeight)
          }
-
-         state.boardData = emptyArray
-      },
-      randomizeLife: (state) => {
-         let lifeArray = _.cloneDeep(state.boardData)
-
-         for (let x = 0; x < lifeArray.length; x++) {
-            for (let y = 0; y < lifeArray[x].length; y++) {
+         
+         for (let x = 0; x < newArray.length; x++) {
+            for (let y = 0; y < newArray[x].length; y++) {
                let roll = Math.random() * 100 // We're comparing with a percentage, so bump it up two decimals
-               lifeArray[x][y] = roll > state.proliferationPercentage ? { life: false, age: 0 } : { life: true, age: 0 }
+               newArray[x][y] = roll > state.proliferationPercentage ? { life: false, age: 0 } : { life: true, age: 0 }
             }
          }
-
-         state.boardData = lifeArray
+         
+         state.boardData = newArray
       },
       toggleLife: (state, { payload }: PayloadAction<Board>) => { state.boardData = payload },
-      resetBoard: (state) => { state = initialBoardDataState }
+      resetBoard: (state) => { state = initialBoardDataState },
    },
 })
 
 export const {
-   setBoardData,
    setBoardWidth,
    setBoardHeight,
    setTileWidth,
    setTileHeight,
-   setPaused,
+   togglePause,
    setProliferationPercentage,
    setTurnTime,
    advanceTime,
    setGeneration,
-   generateEmptyArray,
-   randomizeLife,
+   generateNewArray,
    toggleLife,
    resetBoard,
 } = bookDataSlice.actions

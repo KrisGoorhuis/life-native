@@ -1,8 +1,18 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { generateEmptyArray, randomizeLife, resetBoard, setBoardHeight, setBoardWidth, setProliferationPercentage, setTileHeight, setTileWidth, setTurnTime } from '../../redux/slices/boardSlice'
+import { 
+   generateNewArray, 
+   resetBoard, 
+   setBoardHeight, 
+   setBoardWidth, 
+   setProliferationPercentage, 
+   setTileHeight, 
+   setTileWidth, 
+   setTurnTime, 
+   togglePause 
+} from '../../redux/slices/boardSlice'
 import { State } from '../../redux'
-import { View, StyleSheet, Text, NativeSyntheticEvent, TextInputChangeEventData } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 
 
@@ -13,20 +23,21 @@ interface ControlsProps {
 export default function Controls(props: ControlsProps) {
    const state = useSelector((state: State) => state)
 
-   const [_paused, setPaused] = React.useState<boolean>(state.boardData.paused)
-   const [_boardWidth, setBoardWidth] = React.useState<number>(state.boardData.boardWidth)
-   const [_boardHeight, setBoardHeight] = React.useState<number>(state.boardData.boardHeight)
-   const [_proliferation, setProliferation] = React.useState<number>(state.boardData.proliferationPercentage)
-   const [_turnTime, setTurnTime] = React.useState<number>(state.boardData.turnTime)
-   const [_tileWidth, setTileWidth] = React.useState<number>(state.boardData.tileWidth)
-   const [_tileHeight, setTileHeight] = React.useState<number>(state.boardData.tileHeight)
+   const paused = state.boardData.paused
+   // const [_paused, _setPaused] = React.useState<boolean>(state.boardData.paused)
+   const [_boardWidth, _setBoardWidth] = React.useState<number>(state.boardData.boardWidth)
+   const [_boardHeight, _setBoardHeight] = React.useState<number>(state.boardData.boardHeight)
+   const [_proliferation, _setProliferation] = React.useState<number>(state.boardData.proliferationPercentage)
+   const [_turnTime, _setTurnTime] = React.useState<number>(state.boardData.turnTime)
+   const [_tileWidth, _setTileWidth] = React.useState<number>(state.boardData.tileWidth)
+   const [_tileHeight, _setTileHeight] = React.useState<number>(state.boardData.tileHeight)
 
 
    const dispatch = useDispatch()
 
    const restartGame = () => {
-      dispatch(generateEmptyArray())
-      dispatch(randomizeLife())
+      console.log("restarting")
+      dispatch(generateNewArray())
    }
 
    const reset = () => {
@@ -69,9 +80,8 @@ export default function Controls(props: ControlsProps) {
       restartGame()
    }
 
-   const togglePause = () => {
-      dispatch(togglePause())
-      // props.dispatch({ type: 'TOGGLE_PAUSE' })
+   const _togglePause = () => {
+      dispatch(togglePause(!paused))
    }
 
    useEffect(() => {
@@ -81,103 +91,106 @@ export default function Controls(props: ControlsProps) {
 
 
    const styles = StyleSheet.create({
-      controlsContainer: {
-
+      container: {
+         position: 'absolute',
+         bottom: 30,
+      },
+      inputContainer: {
+         display: 'flex',
+         flexWrap: 'wrap',
+         alignContent: 'center',
+         width: '100%',
+         flexDirection: 'row',
       },
       inputField: {
-
+         width: 185,
+      },
+      buttonContainer: {
+         flexDirection: 'row',
+         justifyContent: 'center',
       },
       controlsButton: {
 
       }
    })
 
-   const thing = (stuff: any) => {
-      console.log("stuff")
-      console.log(stuff)
-      console.log(parseFloat(stuff))
-      console.log("poststuff")
-      if (!stuff) {
-         console.log("nostuff")
-         setBoardWidth(999)
-      }
-      else {
-         setBoardWidth(parseFloat(stuff))
-
-      }
-   }
 
    return (
-      <View style={styles.controlsContainer}>
+      <View style={styles.container}>
          <Text>Extreme values may cause weird behavior.</Text>
-         <TextInput
-            keyboardType={'numeric'}
-            label={"Tiles wide:"}
-            style={styles.inputField}
-            value={_boardWidth.toString()}
-            onChangeText={(text: string) => setBoardWidth(parseFloat(text) || 0)}
-         />
+         <View style={styles.inputContainer}>
+            <TextInput
+               keyboardType={'numeric'}
+               label={"Board width (tiles):"}
+               style={styles.inputField}
+               value={_boardWidth.toString()}
+               onChangeText={(text: string) => _setBoardWidth(parseFloat(text) || 0)}
+            />
 
-         <TextInput
-            keyboardType={'numeric'}
-            label={"Tiles high:"}
-            style={styles.inputField}
-            value={_boardHeight.toString()}
-            onChangeText={(text: string) => setBoardHeight(parseFloat(text) || 0)}
-         />
+            <TextInput
+               keyboardType={'numeric'}
+               label={"Board height (tiles):"}
+               style={styles.inputField}
+               value={_boardHeight.toString()}
+               onChangeText={(text: string) => _setBoardHeight(parseFloat(text) || 0)}
+            />
 
-         <TextInput
-            keyboardType={'numeric'}
-            label={"Life proliferation (%):"}
-            style={styles.inputField}
-            value={_proliferation.toString()}
-            onChangeText={(text: string) => setProliferation(parseFloat(text) || 0)}
-         />
+            <TextInput
+               keyboardType={'numeric'}
+               label={"Life %'age:"}
+               style={styles.inputField}
+               value={_proliferation.toString()}
+               onChangeText={(text: string) => _setProliferation(parseFloat(text) || 0)}
+            />
 
-         <TextInput
-            keyboardType={'numeric'}
-            label={"Turn time (ms):"}
-            style={styles.inputField}
-            value={_turnTime.toString()}
-            onChangeText={(text: string) => setTurnTime(parseFloat(text) || 0)}
-         />
+            <TextInput
+               keyboardType={'numeric'}
+               label={"Turn time (ms):"}
+               style={styles.inputField}
+               value={_turnTime.toString()}
+               onChangeText={(text: string) => _setTurnTime(parseFloat(text) || 0)}
+            />
 
-         <TextInput
-            keyboardType={'numeric'}
-            label={"Tile width (relative units):"}
-            style={styles.inputField}
-            value={_tileWidth.toString()}
-            onChangeText={(text: string) => setTileWidth(parseFloat(text) || 0)}
-         />
+            <TextInput
+               keyboardType={'numeric'}
+               label={"Tile width:"}
+               style={styles.inputField}
+               value={_tileWidth.toString()}
+               onChangeText={(text: string) => _setTileWidth(parseFloat(text) || 0)}
+            />
 
-         <TextInput
-            keyboardType={'numeric'}
-            label={"Tile height (relative units):"}
-            style={styles.inputField}
-            value={_tileHeight.toString()}
-            onChangeText={(text: string) => setTileHeight(parseFloat(text) || 0)}
-         />
+            <TextInput
+               keyboardType={'numeric'}
+               label={"Tile height:"}
+               style={styles.inputField}
+               value={_tileHeight.toString()}
+               onChangeText={(text: string) => _setTileHeight(parseFloat(text) || 0)}
+            />
 
-         <Button
-            onTouchStart={togglePause}
-            style={styles.controlsButton}
-         >
-            {_paused ? "Resume" : "Pause"}
-         </Button>
+         </View>
 
-         <Button
-            onTouchStart={generate}
-            style={styles.controlsButton}
-         >
-            Generate
-         </Button>
+         <View style={styles.buttonContainer}>
+            <Button
+               onTouchStart={_togglePause}
+               style={styles.controlsButton}
+            >
+               {paused ? "Resume" : "Pause"}
+            </Button>
 
-         <Button
-            onTouchStart={() => reset()}
-            style={styles.controlsButton}
-         >
-            Reset
-         </Button>
+            <Button
+               onTouchStart={generate}
+               style={styles.controlsButton}
+            >
+               Generate
+            </Button>
+
+            <Button
+               onTouchStart={() => reset()}
+               style={styles.controlsButton}
+            >
+               Reset
+            </Button>
+         </View>
       </View >
    )
 }
