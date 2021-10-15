@@ -2,7 +2,7 @@ import {
    createSlice,
    PayloadAction,
 } from "@reduxjs/toolkit"
-import { Board, Tile } from "../../model/board"
+import { Board } from "../../model/board"
 import _ from 'lodash'
 
 
@@ -26,7 +26,7 @@ const initialBoardDataState: BookDataState = {
    tileHeight: 1,
    paused: false,
    proliferationPercentage: 15,
-   turnTime: 1,
+   turnTime: 350,
    generation: 0
 }
 
@@ -67,7 +67,6 @@ const bookDataSlice = createSlice({
                   }
                }
             }
-
 
 
             // These are the rules of Conway's game. Translated from Wikipedia.

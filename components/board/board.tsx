@@ -1,22 +1,27 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import LifeTile from './tile'
+import LifeTile from './lifeTile'
 import { State } from '../../redux'
 import { advanceTime, generateNewArray, toggleLife } from '../../redux/slices/boardSlice'
 import _ from 'lodash'
 import { Text, StyleSheet, View } from 'react-native'
-
+import Animated, { useSharedValue } from 'react-native-reanimated'
+import { withTheme } from 'react-native-paper'
 
 
 interface BoardProps {
-
+   theme: ReactNativePaper.Theme
 }
 
-export default function Board(props: BoardProps) {
-   const turnTime = useSelector((state: State) => state.boardData.turnTime)
-   const boardData = useSelector((state: State) => state.boardData.boardData)
-   const generation = useSelector((state: State) => state.boardData.generation)
+export const Board = (props: BoardProps) => {
+   const boardState = useSelector((state: State) => state.boardData)
+
+   const boardWidth = boardState.boardWidth
+   const boardHeight = boardState.boardHeight
+   const turnTime = boardState.turnTime
+   const boardData = boardState.boardData
+   const generation = boardState.generation
 
    const dispatch = useDispatch()
 
@@ -31,7 +36,6 @@ export default function Board(props: BoardProps) {
    }
 
    function _advanceTime() {
-      console.log("advancing")
       dispatch(advanceTime())
       setTimeout(() => {
          _advanceTime()
@@ -53,6 +57,118 @@ export default function Board(props: BoardProps) {
 
       dispatch(toggleLife(newBoardData))
    }
+
+
+   // let _touchX = useSharedValue(0)
+
+   // const handlePan = Animated.event([{ nativeEvent: { x: _touchX } }], {
+   //    useNativeDriver: true,
+   //  });
+
+
+
+   // // Sketches aimed at getting drag to draw life to work. Maybe not
+   // const [initialY, setInitialX] = React.useState<number>()
+   // const [initialPanY, setInitialY] = React.useState<number>()
+   // const coordinateIntervals: { x: number, y: number }[] = []
+
+   // let previousX: number
+   // let previousY: number
+
+   // const handlePan = Animated.useAnimatedGestureHandler({
+
+   //    onStart: (event, ctx) => {
+   //       setInitialX(event.x)
+   //       setInitialY(event.y)
+   //    },
+   //    onActive: (event, ctx) => {
+   //       console.log("On active")
+   //       if (previousX && Math.abs(previousX + event.x)  ) {
+
+   //       }
+
+   //       previousX = event.x
+   //       previousY = event.y
+   //    }
+   // })
+
+   console.log("generation")
+   console.log(generation)
+
+
+   const listing = {
+      width: 8,
+      height: 8,
+      padding: 1,
+      margin: 3,
+      marginBottom: 0,
+   }
+
+   const styles = StyleSheet.create({
+      boardContainer: {
+         display: 'flex',
+         borderColor: 'black',
+         borderRadius: 5,
+         borderWidth: 5,
+      },
+      boardMain: {
+         borderRadius: 5,
+         display: 'flex',
+         flexDirection: 'column',
+      },
+      infoBox: {
+         display: 'flex',
+         flexDirection: 'row',
+         justifyContent: 'space-around',
+         marginBottom: 10,
+         fontSize: 16,
+      },
+      ageInfoContainer: {
+
+      },
+      ageInfoDetails: {
+         display: 'flex',
+         flexDirection: 'row',
+         alignItems: 'center',
+         justifyContent: 'center',
+         height: 25,
+         margin: 0,
+         padding: 0,
+      },
+      ageInfoAdolescent: {
+         ...listing,
+         backgroundColor: props.theme.colors.newLifeGreen,
+      },
+      ageInfoJuvenile: {
+         ...listing,
+         backgroundColor: props.theme.colors.adolescentLifeTeal
+      },
+      ageInfoAdult: {
+         ...listing,
+         backgroundColor: props.theme.colors.adultLifeBlue
+      },
+      generationContainer: {
+         display: 'flex',
+         flexDirection: 'column',
+         height: 25,
+         color: 'white',
+      },
+      generatingMessage: {
+         minWidth: 300,
+         minHeight: 300,
+         color: 'white',
+         fontSize: 16,
+      },
+      boardBody: {
+         display: 'flex',
+         flexDirection: 'row',
+         justifyContent: 'center',
+      },
+      boardRow: {
+         display: 'flex',
+         flexDirection: 'column',
+      }
+   })
 
    return (
       <View style={styles.boardContainer}>
@@ -99,80 +215,4 @@ export default function Board(props: BoardProps) {
    )
 }
 
-const listing = {
-   width: 8,
-   height: 8,
-   padding: 1,
-   margin: 3,
-   marginBottom: 0,
-}
-
-const styles = StyleSheet.create({
-   boardContainer: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-   },
-   boardMain: {
-      padding: 10,
-      paddingTop: 15,
-      borderRadius: 5,
-      display: 'flex',
-      flexDirection: 'column',
-      paddingBottom: 30,
-      marginBottom: 15,
-   },
-   infoBox: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      marginBottom: 10,
-      fontSize: 16,
-   },
-   ageInfoContainer: {
-
-   },
-   ageInfoDetails: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: 25,
-      margin: 0,
-      padding: 0,
-   },
-   ageInfoAdolescent: {
-      ...listing,
-      backgroundColor: 'green',
-   },
-   ageInfoJuvenile: {
-      ...listing,
-      backgroundColor: 'teal'
-   },
-   ageInfoAdult: {
-      ...listing,
-      backgroundColor: 'blue'
-   },
-   generationContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      height: 25,
-      color: 'white',
-   },
-   generatingMessage: {
-      minWidth: 300,
-      minHeight: 300,
-      color: 'white',
-      fontSize: 16,
-   },
-   boardBody: {
-      display: 'flex',
-      flexDirection: 'row',
-      height: '100%',
-      justifyContent: 'center',
-   },
-   boardRow: {
-      display: 'flex',
-      flexDirection: 'column',
-   }
-})
+export default withTheme(Board)

@@ -5,6 +5,7 @@ import {
    resetBoard, 
    setBoardHeight, 
    setBoardWidth, 
+   setGeneration, 
    setProliferationPercentage, 
    setTileHeight, 
    setTileWidth, 
@@ -25,23 +26,22 @@ export default function Controls(props: ControlsProps) {
 
    const paused = state.boardData.paused
    // const [_paused, _setPaused] = React.useState<boolean>(state.boardData.paused)
-   const [_boardWidth, _setBoardWidth] = React.useState<number>(state.boardData.boardWidth)
-   const [_boardHeight, _setBoardHeight] = React.useState<number>(state.boardData.boardHeight)
-   const [_proliferation, _setProliferation] = React.useState<number>(state.boardData.proliferationPercentage)
-   const [_turnTime, _setTurnTime] = React.useState<number>(state.boardData.turnTime)
-   const [_tileWidth, _setTileWidth] = React.useState<number>(state.boardData.tileWidth)
-   const [_tileHeight, _setTileHeight] = React.useState<number>(state.boardData.tileHeight)
+   const [_boardWidth, _setBoardWidth] = React.useState<string>(state.boardData.boardWidth.toString())
+   const [_boardHeight, _setBoardHeight] = React.useState<string>(state.boardData.boardHeight.toString())
+   const [_proliferation, _setProliferation] = React.useState<string>(state.boardData.proliferationPercentage.toString())
+   const [_turnTime, _setTurnTime] = React.useState<string>(state.boardData.turnTime.toString())
+   const [_tileWidth, _setTileWidth] = React.useState<string>(state.boardData.tileWidth.toString())
+   const [_tileHeight, _setTileHeight] = React.useState<string>(state.boardData.tileHeight.toString())
 
 
    const dispatch = useDispatch()
 
    const restartGame = () => {
-      console.log("restarting")
       dispatch(generateNewArray())
    }
 
    const reset = () => {
-      console.log("RESET")
+      dispatch(setGeneration(0))
       // Control fields will reset in useEffect. Otherwise we update with old values.
       // This is a separate function from restartGame() so our reducer can revert to our initialState. restartGame() doesn't do that.
       dispatch(resetBoard())
@@ -64,18 +64,19 @@ export default function Controls(props: ControlsProps) {
    // }
 
    const generate = () => {
-      console.log("GENERATE")
       // Instead of writing additional code to set our timer to 0, we can reuse reset().
       // reset()
-      dispatch(setTurnTime(_turnTime))
+      dispatch(setTurnTime(parseFloat(_turnTime)))
+
 
       // These can pass NaN. The reducer will check for those.
-      dispatch(setBoardWidth(_tileWidth))
-      dispatch(setBoardHeight(_tileHeight))
-      dispatch(setProliferationPercentage(_proliferation))
-      dispatch(setTurnTime(_turnTime))
-      dispatch(setTileWidth(_tileWidth))
-      dispatch(setTileHeight(_tileHeight))
+      dispatch(setBoardWidth(parseFloat(_boardWidth)))
+      dispatch(setBoardHeight(parseFloat(_boardHeight)))
+      dispatch(setProliferationPercentage(parseFloat(_proliferation)))
+      dispatch(setTurnTime(parseFloat(_turnTime)))
+      dispatch(setTileWidth(parseFloat(_tileWidth)))
+      dispatch(setTileHeight(parseFloat(_tileHeight)))
+      dispatch(setGeneration(0))
 
       restartGame()
    }
@@ -94,6 +95,8 @@ export default function Controls(props: ControlsProps) {
       container: {
          position: 'absolute',
          bottom: 30,
+         padding: 5,
+         backgroundColor: 'white'
       },
       inputContainer: {
          display: 'flex',
@@ -124,7 +127,7 @@ export default function Controls(props: ControlsProps) {
                label={"Board width (tiles):"}
                style={styles.inputField}
                value={_boardWidth.toString()}
-               onChangeText={(text: string) => _setBoardWidth(parseFloat(text) || 0)}
+               onChangeText={(text: string) => _setBoardWidth(text || "0")}
             />
 
             <TextInput
@@ -132,7 +135,7 @@ export default function Controls(props: ControlsProps) {
                label={"Board height (tiles):"}
                style={styles.inputField}
                value={_boardHeight.toString()}
-               onChangeText={(text: string) => _setBoardHeight(parseFloat(text) || 0)}
+               onChangeText={(text: string) => _setBoardHeight(text || "0")}
             />
 
             <TextInput
@@ -140,7 +143,7 @@ export default function Controls(props: ControlsProps) {
                label={"Life %'age:"}
                style={styles.inputField}
                value={_proliferation.toString()}
-               onChangeText={(text: string) => _setProliferation(parseFloat(text) || 0)}
+               onChangeText={(text: string) => _setProliferation(text || "0")}
             />
 
             <TextInput
@@ -148,7 +151,7 @@ export default function Controls(props: ControlsProps) {
                label={"Turn time (ms):"}
                style={styles.inputField}
                value={_turnTime.toString()}
-               onChangeText={(text: string) => _setTurnTime(parseFloat(text) || 0)}
+               onChangeText={(text: string) => _setTurnTime(text || "0")}
             />
 
             <TextInput
@@ -156,7 +159,7 @@ export default function Controls(props: ControlsProps) {
                label={"Tile width:"}
                style={styles.inputField}
                value={_tileWidth.toString()}
-               onChangeText={(text: string) => _setTileWidth(parseFloat(text) || 0)}
+               onChangeText={(text: string) => _setTileWidth(text || "0")}
             />
 
             <TextInput
@@ -164,7 +167,7 @@ export default function Controls(props: ControlsProps) {
                label={"Tile height:"}
                style={styles.inputField}
                value={_tileHeight.toString()}
-               onChangeText={(text: string) => _setTileHeight(parseFloat(text) || 0)}
+               onChangeText={(text: string) => _setTileHeight(text || "0")}
             />
 
          </View>
