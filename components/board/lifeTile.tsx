@@ -22,7 +22,7 @@ export const LifeTile = (props: TileProps) => {
          return props.theme.colors.adolescentLifeTeal
       }
       if (props.tile.age >= 3) {
-         return props.theme.colors.newLifeGreen
+         return props.theme.colors.adultLifeBlue
       }
    }
 
